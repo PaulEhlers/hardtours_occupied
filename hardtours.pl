@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 use LWP::Simple;
 use Encode;
+use strict;
+no warnings "experimental::postderef", "experimental::signatures";
 
 my $date_regex = '(^[0-9\.\-\s]+)';
 my $ticker;
@@ -46,7 +48,7 @@ while(1) {
 sub _init {
 	print "Loading festivals from www.hardtours.de ...\n";
 	load_festivals();
-	die "Could not find any festivals :-(" if((keys %{ticker}));
+	die "Could not find any festivals :-(" unless((keys %{$ticker}));
 	print "Successfully loaded the festivals![".(keys %{$ticker})." found]\n";
 	print "=" x 50, "\n";
 }
@@ -63,7 +65,6 @@ sub load_festivals {
 	}
 	foreach my $tour (@tours) {
 		next unless($tour =~ /tour/);
-		$bool = 0;
 		if($tour =~ /<b>([^<]+)/) {
 			my $name = $1;
 			my $date;
@@ -88,6 +89,7 @@ sub print_help {
 	print "\nHier alle aktuellen Kommandos:\n";
 	print "exit   : Beende das Programm\n";
 	print "reload : Aktualisiere die Daten\n";
+	print "all    : Zeige alle Festivals an\n";
 	print "#" x 50;
 	print "\n";
 }
